@@ -1,5 +1,6 @@
 import os
 from elevenlabs import generate, play, set_api_key, Voice
+from logging_module import log
 
 class ElevenLabsManager:
     def __init__(self, api_key):
@@ -24,8 +25,10 @@ class ElevenLabsManager:
             )
             if audio:
                 print('Audio generated successfully, beginning playback...')
+                log('info', 'Audio generated successfully, beginning playback...')
                 play(audio)
                 print('Playback completed.')
+                log('info', 'Playback completed.')
             else:
                 print("Failed to generate audio.")
                 print('Terminating playback.')

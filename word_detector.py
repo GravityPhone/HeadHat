@@ -1,5 +1,6 @@
 import os
 from pocketsphinx import LiveSpeech, get_model_path
+from logging_module import log
 
 # Placeholder for the message handler function, set by main_controller.py
 message_handler = None
@@ -14,7 +15,9 @@ def setup_keyword_detection():
     kws_path = os.path.join(script_dir, 'keywords.kws')  # Path to your keywords.kws file
 
     print(f"Model Path: {model_path}")
+    log('info', f'Model Path: {model_path}')
     print(f"Keywords File Path: {kws_path}")
+    log('info', f'Keywords File Path: {kws_path}')
 
     try:
         speech = LiveSpeech(
@@ -34,7 +37,8 @@ def setup_keyword_detection():
         return
 
     for phrase in speech:
-        detected_words = [seg[0] for seg in phrase.segments(detailed=True)]  # Extract words
+        detected_words = [seg[0] for seg in phrase.segments(detailed=True)]
+        log('info', f'Detected words: {detected_words}')  # Extract words
         print(f"Detected words: {detected_words}")  # Log for debugging
         
         # If a message handler is set, call it with the detected words

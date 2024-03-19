@@ -1,5 +1,6 @@
 import pyaudio
 import wave
+from logging_module import log
 
 class SoundEffectsPlayer:
     def __init__(self):
@@ -31,6 +32,7 @@ class SoundEffectsPlayer:
         # Cleanup
         stream.stop_stream()
         stream.close()
+        log('info', f'Played sound effect from {file_path}')
 
     def __del__(self):
         """Ensure PyAudio instance is terminated upon deletion."""

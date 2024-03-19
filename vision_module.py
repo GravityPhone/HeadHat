@@ -1,4 +1,5 @@
 import subprocess
+from logging_module import log
 import os
 import base64
 import uuid
@@ -23,10 +24,14 @@ class VisionModule:
         print("Taking picture now...")
         capture_command = f"fswebcam --no-banner --resolution 1280x720 --save {self.image_path} -d /dev/video0 -r 1280x720 --png 1"
         print(f'Image capturing command has been executed')
+        log('info', f'Image capturing command has been executed')
+        log('info', f'Image capturing command has been executed')
+        log('info', f'Image capturing command has been executed')
 
         try:
             subprocess.check_call(capture_command.split())
             print(f"Image captured successfully: {self.image_path}")
+            log('info', f'Image captured successfully: {self.image_path}')
             self.capture_complete.set()  # Signal that the capture has completed
         except subprocess.CalledProcessError as e:
             print(f"Failed to capture image: {e}")
@@ -39,6 +44,7 @@ class VisionModule:
             with open(self.image_path, "rb") as image_file:
                 encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
                 print(f'Image encoded to base64: {encoded_image}')
+                log('info', f'Image encoded to base64: {encoded_image}')
                 return encoded_image
         else:
             print("No image file found or image capture failed.")
@@ -66,9 +72,10 @@ class VisionModule:
                 "max_tokens": 300
             }
             print(f'Sending POST request to OpenAI API for image description')
-
+            log('info', f'Sending POST request to OpenAI API for image description')
             response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
             if response.status_code == 200:
+                log('info', 'Response received from OpenAI API')
                 try:
                     return response.json()['choices'][0]['message']['content']
                 except KeyError:
