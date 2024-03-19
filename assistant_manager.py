@@ -1,4 +1,5 @@
 import openai
+from logging_module import log
 from . import Assistant
 from typing_extensions import override
 import time
@@ -18,12 +19,12 @@ class EventHandler(Assistant):
   def on_tool_call_delta(self, delta, snapshot):
     if delta.type == 'code_interpreter':
       if delta.code_interpreter.input:
-        print(delta.code_interpreter.input, end="", flush=True)
+        log('info', delta.code_interpreter.input, end="", flush=True)
       if delta.code_interpreter.outputs:
-        print(f"\n\noutput >", flush=True)
+        log('info', f"\n\noutput >", flush=True)
         for output in delta.code_interpreter.outputs:
           if output.type == "logs":
-            print(f"\n{output.logs}", flush=True)
+            log('info', f"\n{output.logs}", flush=True)
 
 class AssistantManager:
     def __init__(self, openai_api_key):
@@ -33,11 +34,11 @@ class AssistantManager:
     def create_thread(self):
         try:
             thread = self.client.beta.threads.create()
-            print(f'Successfully created thread with ID: {thread.id}')
+            log('info', f'Successfully created thread with ID: {thread.id}')
             log('info', f'Successfully created thread with ID: {thread.id}')
             return thread.id
         except Exception as e:
-            print(f"Failed to create a thread: {e}")
+            log('error', f"Failed to create a thread: {e}")
             return None
 
     def add_message_to_thread(self, thread_id, message_content, role="user"):
@@ -47,11 +48,11 @@ class AssistantManager:
                 role=role,
                 content=message_content
             )
-            print(f'Successfully added the message with ID: {message.id} to thread: {thread_id}')
+            log('info', f'Successfully added the message with ID: {message.id} to thread: {thread_id}')
             log('info', f'Successfully added the message with ID: {message.id} to thread: {thread_id}')
             return message.id
         except Exception as e:
-            print(f"Failed to add message to thread {thread_id}: {e}")
+            log('error', f"Failed to add message to thread {thread_id}: {e}")
             return None
 
     def run_assistant(self, thread_id, assistant_id, instructions):
@@ -71,9 +72,9 @@ class AssistantManager:
             # Assuming response.data contains the messages and taking the first one
             recent_message = response.data[0] if response.data else None
             if recent_message:
-                print(f'Retrieved the most recent message: {recent_message.id} from thread: {thread_id}')
+                log('info', f'Retrieved the most recent message: {recent_message.id} from thread: {thread_id}')
             log('info', f'Retrieved the most recent message: {recent_message.id} from thread: {thread_id}')
             return recent_message
         except Exception as e:
-            print(f"Failed to retrieve the most recent message from thread {thread_id}: {e}")
+            log('error', f"Failed to retrieve the most recent message from thread {thread_id}: {e}")
             return None

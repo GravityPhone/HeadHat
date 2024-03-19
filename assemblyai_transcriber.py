@@ -12,7 +12,7 @@ class AssemblyAITranscriber:
         transcriber = aai.Transcriber()
         # Start the transcription process
         transcript = transcriber.transcribe(audio_file_path)
-        print(f'Transcription result: {transcript.text}')
+        log('info', f'Transcription result: {transcript.text}')
         
         # Check the transcription status and return the appropriate response
         if transcript.status == aai.TranscriptStatus.error:
@@ -25,4 +25,4 @@ class AssemblyAITranscriber:
 # The following testing code should be commented out or removed in the integration
 # if __name__ == "__main__":
 #     transcriber = AssemblyAITranscriber(api_key="9c45c5934f8f4dcd9c13c54875145c77")
-#     print(transcriber.transcribe_audio_file("./path_to_your_audio_file.wav"))
+#     log('info', transcriber.transcribe_audio_file("./path_to_your_audio_file.wav"))
