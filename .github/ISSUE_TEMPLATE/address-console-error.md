@@ -1,9 +1,9 @@
 ---
-name: Custom issue template
-about: 'Sweep: Address Console Error'
-title: ''
+name: Address Console Error
+about: Address Console Error
+title: 'Sweep: Address Console Error and troubleshoot'
 labels: ''
-assignees: ''
+assignees: GravityPhone
 
 ---
 
