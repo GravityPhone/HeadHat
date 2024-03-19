@@ -21,20 +21,20 @@ class VisionModule:
         """Captures an image using fswebcam and saves it as a PNG file."""
         image_file_name = f"{uuid.uuid4()}.png"
         self.image_path = f"/tmp/{image_file_name}"
-        print("Taking picture now...")
+        log('info', "Taking picture now...")
         capture_command = f"fswebcam --no-banner --resolution 1280x720 --save {self.image_path} -d /dev/video0 -r 1280x720 --png 1"
-        print(f'Image capturing command has been executed')
+        log('info', f'Image capturing command has been executed')
         log('info', f'Image capturing command has been executed')
         log('info', f'Image capturing command has been executed')
         log('info', f'Image capturing command has been executed')
 
         try:
             subprocess.check_call(capture_command.split())
-            print(f"Image captured successfully: {self.image_path}")
+            log('info', f'Image captured successfully: {self.image_path}')
             log('info', f'Image captured successfully: {self.image_path}')
             self.capture_complete.set()  # Signal that the capture has completed
         except subprocess.CalledProcessError as e:
-            print(f"Failed to capture image: {e}")
+            log('error', f'Failed to capture image: {e}')
             self.image_path = None  # Ensure path is reset on failure
             self.capture_complete.set()  # Signal to unblock any waiting process, even though capture failed
 
@@ -43,11 +43,11 @@ class VisionModule:
         if self.image_path and os.path.exists(self.image_path):
             with open(self.image_path, "rb") as image_file:
                 encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                print(f'Image encoded to base64: {encoded_image}')
+                log('info', f'Image encoded to base64: {encoded_image}')
                 log('info', f'Image encoded to base64: {encoded_image}')
                 return encoded_image
         else:
-            print("No image file found or image capture failed.")
+            log('error', "No image file found or image capture failed.")
         return None
 
     def get_image_description(self, transcription, base64_image):
@@ -71,7 +71,7 @@ class VisionModule:
                 ],
                 "max_tokens": 300
             }
-            print(f'Sending POST request to OpenAI API for image description')
+            log('info', f'Sending POST request to OpenAI API for image description')
             log('info', f'Sending POST request to OpenAI API for image description')
             response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
             if response.status_code == 200:
@@ -81,7 +81,7 @@ class VisionModule:
                 except KeyError:
                     return "Description not available or wrong response format."
             else:
-                print(f"Error in OpenAI API call: {response.text}")
+                log('error', f'Error in OpenAI API call: {response.text}')
         return "Failed to encode image or image capture failed."
 
     def describe_captured_image(self, transcription="What's in this image?"):
@@ -90,7 +90,7 @@ class VisionModule:
         base64_image = self.encode_image_to_base64()
         if base64_image:
             description = self.get_image_description(transcription, base64_image)
-            print(f'Sending image description request, obtained description: {description}')
+            log('info', f'Sending image description request, obtained description: {description}')
             # Cleanup
             if self.image_path and os.path.exists(self.image_path):
                 os.remove(self.image_path)
