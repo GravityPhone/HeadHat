@@ -14,9 +14,9 @@ def setup_keyword_detection():
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
     kws_path = os.path.join(script_dir, 'keywords.kws')  # Path to your keywords.kws file
 
-    print(f"Model Path: {model_path}")
+    log('info', f"Model Path: {model_path}")
     log('info', f'Model Path: {model_path}')
-    print(f"Keywords File Path: {kws_path}")
+    log('info', f'Keywords File Path: {kws_path}')
     log('info', f'Keywords File Path: {kws_path}')
 
     try:
@@ -30,16 +30,16 @@ def setup_keyword_detection():
             lm=None,
             kws=kws_path
         )
-        print("PocketSphinx initialized successfully.")
-        print("Listening for keywords...")
+        log('info', 'PocketSphinx initialized successfully.')
+        log('info', 'Listening for keywords...')
     except Exception as e:
-        print(f"Failed to initialize PocketSphinx: {e}")
+        log('error', f'Failed to initialize PocketSphinx: {e}')
         return
 
     for phrase in speech:
         detected_words = [seg[0] for seg in phrase.segments(detailed=True)]
         log('info', f'Detected words: {detected_words}')  # Extract words
-        print(f"Detected words: {detected_words}")  # Log for debugging
+        log('info', f'Detected words: {detected_words}')  # Log for debugging
         
         # If a message handler is set, call it with the detected words
         if message_handler:
