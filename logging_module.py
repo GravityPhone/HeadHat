@@ -1,5 +1,6 @@
 import os
 import logging
+import traceback
 
 logging.basicConfig(filename=os.path.join(os.path.dirname(__file__), 'app.log'), level=logging.INFO)
 console_handler = logging.StreamHandler()
@@ -13,5 +14,8 @@ def log(level, message):
         logging.warning(message)
     elif level == 'error':
         logging.error(message)
+    elif level == 'exception':
+        logging.exception(message)
     else:
+        pass
         logging.debug(message)
