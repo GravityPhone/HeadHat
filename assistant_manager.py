@@ -1,6 +1,6 @@
 import openai
 from logging_module import log
-from . import Assistant
+from Assistant import Assistant
 from typing_extensions import override
 import time
 
