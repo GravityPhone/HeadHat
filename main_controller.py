@@ -1,17 +1,26 @@
-import os
-import time
-from logging_module import log
-from word_detector import setup_keyword_detection, set_message_handler
-from audio_recorder import start_recording, stop_recording
-from assemblyai_transcriber import AssemblyAITranscriber
-from assistant_manager import AssistantManager
-from eleven_labs_manager import ElevenLabsManager
-from vision_module import VisionModule
+import sys
+import traceback
+try:
+    import os
+    import time
+    from logging_module import log
+    from word_detector import setup_keyword_detection, set_message_handler
+    from audio_recorder import start_recording, stop_recording
+    from assemblyai_transcriber import AssemblyAITranscriber
+    from assistant_manager import AssistantManager
+    from eleven_labs_manager import ElevenLabsManager
+    from vision_module import VisionModule
 
-# Initialize modules with provided API keys
-assemblyai_transcriber = AssemblyAITranscriber(api_key=os.getenv("ASSEMBLYAI_API_KEY"))
-assistant_manager = AssistantManager(openai_api_key=os.getenv("OPENAI_API_KEY"))
-eleven_labs_manager = ElevenLabsManager(api_key=os.getenv("ELEVENLABS_API_KEY"))
+    # Initialize modules with provided API keys
+    assemblyai_transcriber = AssemblyAITranscriber(api_key=os.getenv("ASSEMBLYAI_API_KEY"))
+    assistant_manager = AssistantManager(openai_api_key=os.getenv("OPENAI_API_KEY"))
+    eleven_labs_manager = ElevenLabsManager(api_key=os.getenv("ELEVENLABS_API_KEY"))
+except ImportError as e:
+    error_message = str(e)
+    traceback_text = traceback.format_exc()
+    sys.stderr.write(f"{error_message}\n{traceback_text}")
+    if 'log' in globals():
+        log('error', f"Import error encountered.\nError message: {error_message}\nTraceback: {traceback_text}")
 vision_module = VisionModule(openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 # State variables
